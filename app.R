@@ -11,6 +11,15 @@ source("CollectShotData.R")
 
 ui <- fluidPage(
   
+  #Change default zoom of the app
+  tags$style("
+              body {
+    -moz-transform: scale(1.5, 1.5); /* Moz-browsers */
+    zoom: 1.5; /* Other non-webkit browsers */
+    zoom: 150%; /* Webkit browsers */
+}
+              "),
+  
   # Application title
   titlePanel("NHL Shot Chart Generator"),
   
