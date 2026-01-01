@@ -5,6 +5,7 @@ library(stringr)
 library(glue)
 library(magick)
 library(ggiraph)
+#Test change
 
 source("CollectShotData.R")
 devtools::source_url("https://raw.githubusercontent.com/mrbilltran/the-win-column/master/nhl_rink_plot.R")
