@@ -94,7 +94,8 @@ server <- function(input, output, session) {
   
   output$chart <- renderPlot({
     plot_input()
-  })
+  },
+  res = 96)
   
   output$save <- downloadHandler(
     filename = "ShotPlot.png",
