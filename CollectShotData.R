@@ -46,6 +46,7 @@ for (i in 1:nrow(deltaE)) {
 
 #Manually reduce deltaE for some edge cases that occur on occasion
 deltaE["BUF", "STL"] <- deltaE["STL", "BUF"] <- 10
+deltaE["CAR", "MTL"] <- deltaE["MTL", "CAR"] <- 10
 
 #Grabs basic game information (teams, team colors, etc.)
 getGameInfoByDate <- function(input_date = format(Sys.Date(), format = "%Y-%m-%d")) {

@@ -15,7 +15,7 @@ ui <- fluidPage(
   titlePanel("NHL Shot Chart Generator"),
   
   sidebarPanel(
-    
+              
     textInput("date", "Enter a date (MM-DD-YYYY):", value = format(Sys.Date(), format = "%m-%d-%Y")),
     
     fluidRow(
@@ -32,7 +32,7 @@ ui <- fluidPage(
   
   mainPanel(
     card(plotOutput("chart"))
-  )
+  )                    
   
 )
 
