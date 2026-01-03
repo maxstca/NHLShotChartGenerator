@@ -7,12 +7,17 @@ library(spacesXYZ)
 #RDA files
 load("team_logos_colors.rda") #Data sourced from github user danmorse314 via the hockeyR package.
 
-#Edit some values from the above dataframe to avoid scenarios where obs. are plotted in white against a white background
-team_logos_colors$team_color2[11] <- "#BDAD7E" #DET alt
-team_logos_colors$team_color1[13] <- "#C8102E" #Swap FLA colors
-team_logos_colors$team_color2[13] <- "#041E42" #Swap FLA colors
-team_logos_colors$team_color2[27] <- "#808080"  #TBL Alt
-team_logos_colors$team_color2[28] <- "#000000" #TOR Alt
+#Manually edit values in the dataframe from above
+#team_logos_colors$team_color2[11] <- "#BDAD7E" #DET alt
+#team_logos_colors$team_color1[13] <- "#C8102E" #Swap FLA colors
+#team_logos_colors$team_color2[13] <- "#041E42" #Swap FLA colors
+#team_logos_colors$team_color1[23] <- "#000000" #Swap PIT colors
+#team_logos_colors$team_color2[23] <- "#FCB514" #SWAP PIT colors
+#team_logos_colors$team_color2[27] <- "#808080" #TBL Alt
+#team_logos_colors$team_color2[28] <- "#000000" #TOR Alt
+
+#Save above changes to file
+#save(team_logos_colors, file = "team_logos_colors.rda")
 
 #Base URL to send to helpers
 base <- "https://api-web.nhle.com/v1/gamecenter/"
