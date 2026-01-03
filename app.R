@@ -13,18 +13,6 @@ source("CollectShotData.R")
 
 ui <- fluidPage(
   
-  # Add custom CSS to the head section
-  tags$head(
-    tags$style(HTML("
-      body {
-        zoom: 175%; /* Scales the entire page to 80% */
-        /* For Firefox compatibility, use transform: scale() and adjust positioning */
-        -moz-transform: scale(1.75);
-        -moz-transform-origin: 0 0;
-      }
-    "))
-  ),
-  
   # Application title
   titlePanel("NHL Shot Chart Generator"),
   
