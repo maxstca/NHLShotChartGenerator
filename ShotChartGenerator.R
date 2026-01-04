@@ -22,8 +22,12 @@ generateShotCharts <- function(games, index = 1, includeNonSOG = FALSE) {
   #Check for null PBP data and return early if no PBP exists yet.
   tryCatch({
     pbp <<- getShotData(game$id) |> 
-      rename(x.Coord = xCoord, y.Coord = yCoord)|>
-      mutate(shootingPlayerId = if_else(typeDescKey == "goal", scoringPlayerId, shootingPlayerId))
+      rename(x.Coord = xCoord, y.Coord = yCoord)
+    
+    if ("scoringPlayerId" %in% colnames(pbp)) {
+      pbp <<- pbp |>
+        mutate(shootingPlayerId = if_else(typeDescKey == "goal", scoringPlayerId, shootingPlayerId))
+    }
     
     player_info <<- getPlayerInfo(raw_pbp, game)
   }, error = function(e) {
@@ -65,14 +69,14 @@ generateShotCharts <- function(games, index = 1, includeNonSOG = FALSE) {
   
   away_img <- magick::image_read(distinct(shotdata |>
                                             filter(TeamCode == awayTeamAbbr),
-                                          teamLogo)$teamLogo[1]) %>%
+                                          teamLogo)$teamLogo[1]) |>
     image_colorize(opacity = 60, color = "white")
   
   away_img <- grid::rasterGrob(away_img, interpolate = TRUE)
   
   home_img <- magick::image_read(distinct(shotdata |>
                                             filter(TeamCode == homeTeamAbbr),
-                                          teamLogo)$teamLogo[1]) %>%
+                                          teamLogo)$teamLogo[1]) |>
     image_colorize(opacity = 60, color = "white")
   
   home_img <- grid::rasterGrob(home_img, interpolate = TRUE)
@@ -99,6 +103,10 @@ generateShotCharts <- function(games, index = 1, includeNonSOG = FALSE) {
     scoreline <- glue("{shotdata$awayTeamAbbr[1]} {awaygoals} - {shotdata$homeTeamAbbr[1]} {homegoals}")
     scoreline <- paste0(scoreline, " (SO)")
     
+    #Remove shootout attempts/goals from the data
+    shotdata <- shotdata |>
+      filter(periodType != "SO")
+    
   } else if (any(str_detect(shotdata$periodType, "OT"))) {
     scoreline <- paste0(scoreline, " (OT)")
   }
@@ -116,15 +124,9 @@ generateShotCharts <- function(games, index = 1, includeNonSOG = FALSE) {
 
   }
   
-  #Remove shootout attempts/goals from the data
-  shotdata <- shotdata |>
-    filter(periodType != "SO")
-  
   #Count SOG
   awaySOG <- nrow(shotdata |> filter(TeamCode == awayTeamAbbr))
   homeSOG <- nrow(shotdata |> filter(TeamCode == homeTeamAbbr))
-    
-  
   
   #Generate final plot
   chart <- nhl_rink_plot() + 
