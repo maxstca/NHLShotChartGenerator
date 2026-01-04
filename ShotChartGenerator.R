@@ -124,6 +124,13 @@ generateShotCharts <- function(games, index = 1, includeNonSOG = FALSE) {
 
   }
   
+  title_string <- paste0(title_string, ", ", game$date)
+  
+  #If the game is currently ongoing, add a tag to the title to reflect this status
+  if(game$gameState %in% c("LIVE", "CRIT")) {
+    title_string <- paste0(title_string, " (Live)")
+  }
+  
   #Count SOG
   awaySOG <- nrow(shotdata |> filter(TeamCode == awayTeamAbbr))
   homeSOG <- nrow(shotdata |> filter(TeamCode == homeTeamAbbr))
@@ -135,7 +142,7 @@ generateShotCharts <- function(games, index = 1, includeNonSOG = FALSE) {
     geom_point(data = shotdata, aes(x = x.Coord, y = y.Coord, color = teamColor, shape = factor(typeDescKey)), size = 3) +
     scale_color_identity() +
     labs(
-      title = glue("{title_string}, {game$date}"),
+      title = title_string,
       subtitle = scoreline,
       shape = "Shot Type",
       caption = glue("Total SOG: {shotdata$awayTeamAbbr[1]} {awaySOG} - {shotdata$homeTeamAbbr[1]} {homeSOG}")

@@ -67,6 +67,7 @@ getGameInfoByDate <- function(input_date = format(Sys.Date(), format = "%Y-%m-%d
   games.df <- games.df$games
   id <- games.df[[1]]$id
   date <- format(as.Date(input_date, format = "%Y-%m-%d"), format = "%m-%d-%Y")
+  startTime <- format(as.Date(games.df[[1]]$startTimeUTC), format = "%I:%M %p")
   homeTeam <- games.df[[1]]$homeTeam
   homeTeamAbbrev <- homeTeam$abbrev
   homeLogo <- homeTeam$logo
@@ -75,10 +76,9 @@ getGameInfoByDate <- function(input_date = format(Sys.Date(), format = "%Y-%m-%d
   awayTeamAbbrev <- awayTeam$abbrev
   awayLogo <- awayTeam$logo
   awayID <- awayTeam$id
-  
-  #TODO: Collect some more info about the game, namely date & time.
+  gameState <- games.df[[1]]$gameState
 
-  gameInfo <- data.frame(id, date, homeID, homeTeamAbbrev, homeLogo, awayID, awayTeamAbbrev, awayLogo)
+  gameInfo <- data.frame(id, date, startTime, homeID, homeTeamAbbrev, homeLogo, awayID, awayTeamAbbrev, awayLogo, gameState)
   
   return(gameInfo)
 }
