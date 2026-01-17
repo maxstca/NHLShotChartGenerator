@@ -9,6 +9,10 @@ options(shiny.usecairo=T)
 source("ShotChartGenerator.R")
 source("CollectShotData.R")
 
+# Set the timezone to Eastern Time, will have to look into making this modifiable on the R session.
+
+Sys.setenv(tz = "America/New_York")
+
 # UI
 
 ui <- fluidPage(
@@ -16,26 +20,40 @@ ui <- fluidPage(
   # Application title
   titlePanel("NHL Shot Chart Generator"),
   
-  sidebarPanel(
-              
-    textInput("date", "Enter a date (MM-DD-YYYY):", value = format(Sys.Date(), format = "%m-%d-%Y")),
+  navset_pill(
     
-    fluidRow(
-      column(6, actionButton("previousDay", "Previous Day")),
-      column(6, actionButton("nextDay", "Next Day"))
+    nav_panel("Shot Chart",
+      sidebarPanel(
+              
+        textInput("date", "Enter a date (MM-DD-YYYY):", value = format(as.Date(Sys.Date()), format = "%m-%d-%Y")),
+    
+        fluidRow(
+          column(6, actionButton("previousDay", "Previous Day")),
+          column(6, actionButton("nextDay", "Next Day"))
+        ),
+    
+        selectInput("game", "Select a game:", choices = list("Loading..." = 1)),
+    
+        downloadButton("save", "Save as PNG"),
+    
+        br(),
+    
+        div("Created by Max Campbell.")
+      ),
+  
+      mainPanel(
+        card(plotOutput("chart"))
+      )              
     ),
     
-    selectInput("game", "Select a game:", choices = list("Loading..." = 1)),
+    nav_panel("Preferences",
+      sidebarPanel(
+        selectInput("timezone", "Select a time zone:", choices = OlsonNames(), selected = OlsonNames()[171]),
+        div("Timezones don't currently save across sessions, I'll figure out a way to do this at a later date.")
+      )
+    )
     
-    downloadButton("save", "Save as PNG"),
-    
-    div("Created by Max Campbell.")
-  ),
-  
-  mainPanel(
-    card(plotOutput("chart"))
-  )                    
-  
+  )
 )
 
 server <- function(input, output, session) {
@@ -81,6 +99,13 @@ server <- function(input, output, session) {
     }
     
     updateSelectInput(session, "game", choices = choicelist)
+  })
+  
+  #Update default timezone whenever the preferred timezone is changed in the UI.
+  observeEvent(input$timezone, {
+    
+    Sys.setenv(tz = input$timezone)
+    
   })
   
   #Update the date selection when the Previous Day and Next Day buttons are selected.
