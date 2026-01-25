@@ -53,13 +53,14 @@ generateShotCharts <- function(games, index = 1, includeNonSOG = FALSE) {
   #Transform coordinate plane such that visiting team shoots left, home team shoots right
   for (j in 1:nrow(shotdata)) {
     if (shotdata$homeTeamDefendingSide[j] == "right" && shotdata$awayTeamAbbr[j] == shotdata$TeamCode[j]) {
-      shotdata$x.Coord[j] <- shotdata$x.Coord[j] * -1
-      shotdata$y.Coord[j] <- shotdata$y.Coord[j] * -1
+       shotdata$x.Coord[j] <- shotdata$x.Coord[j] * -1
+       shotdata$y.Coord[j] <- shotdata$y.Coord[j] * -1
     } else if (shotdata$homeTeamDefendingSide[j] == "right" && shotdata$homeTeamAbbr[j] == shotdata$TeamCode[j]) {
       shotdata$x.Coord[j] <- shotdata$x.Coord[j] * -1
       shotdata$y.Coord[j] <- shotdata$y.Coord[j] * -1
     }
   }
+  
   
   #Compute team goals and fetch images for logo overlay
   awaygoals <- nrow(shotdata |>

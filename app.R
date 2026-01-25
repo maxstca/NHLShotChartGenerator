@@ -9,10 +9,6 @@ options(shiny.usecairo=T)
 source("ShotChartGenerator.R")
 source("CollectShotData.R")
 
-# Set the timezone to Eastern Time, will have to look into making this modifiable on the R session.
-
-Sys.setenv(tz = "America/New_York")
-
 # UI
 
 ui <- fluidPage(
@@ -22,7 +18,7 @@ ui <- fluidPage(
   
   navset_pill(
     
-    nav_panel("Shot Chart",
+    nav_panel("Shot Charts",
       sidebarPanel(
               
         textInput("date", "Enter a date (MM-DD-YYYY):", value = format(as.Date(Sys.Date()), format = "%m-%d-%Y")),
@@ -46,10 +42,9 @@ ui <- fluidPage(
       )              
     ),
     
-    nav_panel("Preferences",
+    nav_panel("Player Data",
       sidebarPanel(
-        selectInput("timezone", "Select a time zone:", choices = OlsonNames(), selected = OlsonNames()[171]),
-        div("Timezones don't currently save across sessions, I'll figure out a way to do this at a later date.")
+        div("Coming soon!")
       )
     )
     
