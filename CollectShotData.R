@@ -53,6 +53,7 @@ for (i in 1:nrow(deltaE)) {
 deltaE["BUF", "STL"] <- deltaE["STL", "BUF"] <- 10
 deltaE["CAR", "MTL"] <- deltaE["MTL", "CAR"] <- 10
 deltaE["CAR", "OTT"] <- deltaE["OTT", "CAR"] <- 10
+deltaE["ANA", "EDM"] <- deltaE["EDM", "ANA"] <- 10
 
 #Grabs basic game information (teams, team colors, etc.)
 getGameInfoByDate <- function(input_date = format(Sys.Date(), format = "%Y-%m-%d")) {
@@ -101,7 +102,7 @@ getTeamLogosColors <- function(homeTeamAbbr = "CAR", awayTeamAbbr = "CAR") {
   return(logosColors)
 }
 
-getPBPraw <- function(gameID = "2025020001") {
+getPBPraw <- function(gameID = 2025020001) {
   string <- paste0("https://api-web.nhle.com/v1/gamecenter/", gameID, "/play-by-play")
   returned_raw <- httr::GET(string)
   returned <- fromJSON(rawToChar(returned_raw$content))
