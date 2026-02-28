@@ -54,7 +54,8 @@ ui <- add_cookie_handlers(
       nav_panel("Settings",
                 sidebarPanel(
                   selectInput("timezone", "Select default timezone for application startup:", choices = timeZones(), 
-                              selected = get_cookie(cookie_name = "timezone", missing = "America/New_York"))
+                              selected = timeZones()[grepl("America/New_York", timeZones())]),
+                  actionButton("save_settings", "Save Changes")
                 )    
       )
       
@@ -64,6 +65,29 @@ ui <- add_cookie_handlers(
   
 
 server <- function(input, output, session) {
+  
+  ### SETTINGS ###
+  #If it exists, get the timezone cookie on app startup
+  observe({
+    timezone_cookie <- get_cookie("timezone")
+    
+    # If a cookie value exists, update the input field
+    if (!is.null(timezone_cookie)) {
+      updateSelectInput(session, "timezone", selected = timezone_cookie)
+    }
+  })
+  
+  #Update default timezone whenever the preferred timezone is changed in the UI.
+  observeEvent(input$save_settings, {
+    
+    set_cookie(
+      cookie_name = "timezone",
+      cookie_value = input$timezone
+    )
+    
+  })
+  
+  ### SHOT CHART GENERATOR ###
   
   game_info <- reactive({
     tryCatch({
@@ -108,16 +132,6 @@ server <- function(input, output, session) {
     updateSelectInput(session, "game", choices = choicelist)
   })
   
-  #Update default timezone whenever the preferred timezone is changed in the UI.
-  observeEvent(input$timezone, {
-    
-    set_cookie(
-      cookie_name = "timezone",
-      cookie_value = input$timezone
-    )
-    
-  })
-  
   #Update the date selection when the Previous Day and Next Day buttons are selected.
   observeEvent(input$previousDay, {
     newDate <- format(as.Date(input$date, format = "%m-%d-%Y") - 1, format = "%m-%d-%Y")
@@ -147,7 +161,6 @@ server <- function(input, output, session) {
         )
     }
   )
-  
 }
 
 # Run the application 
