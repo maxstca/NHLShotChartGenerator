@@ -2,7 +2,10 @@
 library(shiny)
 library(bslib)
 library(tidyverse)
-library(cookies)
+if (!require("cookies")) {
+  install.packages("cookies", dependencies = TRUE)
+  library("cookies")
+}
 library(Cairo)
 options(shiny.usecairo=T)
 
