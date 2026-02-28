@@ -55,7 +55,8 @@ ui <- add_cookie_handlers(
                 sidebarPanel(
                   selectInput("timezone", "Select default timezone for application startup:", choices = timeZones(), 
                               selected = timeZones()[grepl("America/New_York", timeZones())]),
-                  actionButton("save_settings", "Save Changes")
+                  actionButton("save_settings", "Save Changes"),
+                  div("Note: browser cookies need to be enabled for this website for changes to save.")
                 )    
       )
       
