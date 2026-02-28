@@ -2,10 +2,7 @@
 library(shiny)
 library(bslib)
 library(tidyverse)
-if (!require("cookies")) {
-  install.packages("cookies", dependencies = TRUE, repos = "http://cran.us.r-project.org")
-  library("cookies")
-}
+library("cookies")
 library(Cairo)
 options(shiny.usecairo=T)
 

@@ -632,6 +632,39 @@
         "Built": "R 4.5.0; ; 2025-06-07 00:28:15 UTC; windows"
       }
     },
+    "clock": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com",
+      "description": {
+        "Package": "clock",
+        "Title": "Date-Time Types and Tools",
+        "Version": "0.7.3",
+        "Authors@R": "c(\n    person(\"Davis\", \"Vaughan\", , \"davis@posit.co\", role = c(\"aut\", \"cre\")),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n  )",
+        "Description": "Provides a comprehensive library for date-time manipulations\n    using a new family of orthogonal date-time classes (durations, time\n    points, zoned-times, and calendars) that partition responsibilities so\n    that the complexities of time zones are only considered when they are\n    really needed. Capabilities include: date-time parsing, formatting,\n    arithmetic, extraction and updating of components, and rounding.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://clock.r-lib.org, https://github.com/r-lib/clock",
+        "BugReports": "https://github.com/r-lib/clock/issues",
+        "Depends": "R (>= 4.0.0)",
+        "Imports": "cli (>= 3.6.4), lifecycle (>= 1.0.4), rlang (>= 1.1.5), tzdb\n(>= 0.5.0), vctrs (>= 0.6.5)",
+        "Suggests": "covr, knitr, magrittr, pillar, rmarkdown, slider (>= 0.3.2),\ntestthat (>= 3.0.0), withr",
+        "LinkingTo": "cpp11 (>= 0.5.2), tzdb (>= 0.5.0)",
+        "VignetteBuilder": "knitr",
+        "Config/build/compilation-database": "true",
+        "Config/Needs/website": "lubridate, tidyverse/tidytemplate",
+        "Config/testthat/edition": "3",
+        "Encoding": "UTF-8",
+        "LazyData": "true",
+        "RoxygenNote": "7.3.2",
+        "NeedsCompilation": "yes",
+        "Packaged": "2025-03-17 14:40:28 UTC; davis",
+        "Author": "Davis Vaughan [aut, cre],\n  Posit Software, PBC [cph, fnd]",
+        "Maintainer": "Davis Vaughan <davis@posit.co>",
+        "Repository": "CRAN",
+        "Date/Publication": "2025-03-21 19:00:02 UTC",
+        "Built": "R 4.5.1; x86_64-w64-mingw32; 2025-07-09 01:55:29 UTC; windows",
+        "Archs": "x64"
+      }
+    },
     "commonmark": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com",
@@ -685,6 +718,32 @@
         "Repository": "CRAN",
         "Date/Publication": "2023-02-01 08:20:06 UTC",
         "Built": "R 4.5.0; ; 2025-06-07 01:27:13 UTC; windows"
+      }
+    },
+    "cookies": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com",
+      "description": {
+        "Package": "cookies",
+        "Title": "Use Browser Cookies with 'shiny'",
+        "Version": "0.2.3",
+        "Authors@R": "c(\n    person(\"Jon\", \"Harmon\", , \"jonthegeek@gmail.com\", role = c(\"aut\", \"cre\", \"cph\"),\n           comment = c(ORCID = \"0000-0003-4781-4346\")),\n    person(\"Klaus\", \"Hartl\", role = \"cph\",\n           comment = \"js-cookie JavaScript library\"),\n    person(\"Fagner\", \"Brack\", role = \"cph\",\n           comment = \"js-cookie JavaScript library\")\n  )",
+        "Description": "Browser cookies are name-value pairs that are saved in a\n    user's browser by a website. Cookies allow websites to persist\n    information about the user and their use of the website. Here we\n    provide tools for working with cookies in 'shiny' apps, in part by\n    wrapping the 'js-cookie' JavaScript library\n    <https://github.com/js-cookie/js-cookie>.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://github.com/r4ds/cookies, https://r4ds.github.io/cookies/",
+        "BugReports": "https://github.com/r4ds/cookies/issues",
+        "Imports": "cli, clock, glue, htmltools, httpuv, jsonlite, purrr, rlang,\nshiny (>= 1.6.0), stats, vctrs",
+        "Suggests": "covr, pkgdown, rmarkdown, roxygen2, testthat (>= 3.0.0)",
+        "Config/testthat/edition": "3",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.2.3",
+        "NeedsCompilation": "no",
+        "Packaged": "2023-10-02 16:44:59 UTC; jonth",
+        "Author": "Jon Harmon [aut, cre, cph] (<https://orcid.org/0000-0003-4781-4346>),\n  Klaus Hartl [cph] (js-cookie JavaScript library),\n  Fagner Brack [cph] (js-cookie JavaScript library)",
+        "Maintainer": "Jon Harmon <jonthegeek@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2023-10-02 17:20:02 UTC",
+        "Built": "R 4.5.2; ; 2026-02-25 03:49:49 UTC; windows"
       }
     },
     "cpp11": {
@@ -4499,22 +4558,28 @@
   },
   "files": {
     ".RData": {
-      "checksum": "e6d41287237607ba4d91538f038fc311"
+      "checksum": "840fb29e31e42f54c0b7450250cdf46a"
     },
     "app.R": {
-      "checksum": "029ad319d70c64e688529854ee9e6334"
+      "checksum": "1a69f26ef7195d60f4e73fe4c9e55e2f"
     },
     "CollectShotData.R": {
-      "checksum": "e4ffc4490cc641ba3b0697f53b3a3e9a"
+      "checksum": "005f6e7ba4bbcf47bdd590df122cf936"
     },
     "nhl_rink_plot.R": {
       "checksum": "1db94810a554929ebd5387c169d6e471"
     },
+    "PlayerData.R": {
+      "checksum": "5a2825d2a442b53e4afefe07f4d0b743"
+    },
     "ShotChartGenerator.R": {
-      "checksum": "af8ae5e85e822122bb2fec23d6bb2bd2"
+      "checksum": "6362286e69effb6cf00b83cf3045323f"
     },
     "team_logos_colors.rda": {
-      "checksum": "40a157708a6a8c8355d5bf4299151691"
+      "checksum": "1dbe6f335be783bf3b0f94155107904f"
+    },
+    "TimeZoneHelper.R": {
+      "checksum": "b6f36274f39bbf1ff8151730b071b180"
     }
   },
   "users": null
