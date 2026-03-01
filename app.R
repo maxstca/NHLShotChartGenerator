@@ -76,6 +76,8 @@ server <- function(input, output, session) {
     if (!is.null(timezone_cookie)) {
       updateSelectInput(session, "timezone", selected = timezone_cookie)
     }
+    
+    updateDateInput(session, "date", value = getDate(timezone = timezone_cookie))
   })
   
   #Update default timezone whenever the preferred timezone is changed in the UI.
