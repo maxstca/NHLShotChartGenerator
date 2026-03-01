@@ -2,54 +2,66 @@
 library(shiny)
 library(bslib)
 library(tidyverse)
+library(cookies)
 library(Cairo)
 options(shiny.usecairo=T)
 
 #Helper files
 source("ShotChartGenerator.R")
 source("CollectShotData.R")
+source("TimeZoneHelper.R")
 
 # UI
 
-ui <- fluidPage(
-  
-  # Application title
-  titlePanel("NHL Shot Chart Generator"),
-  
-  navset_pill(
+ui <- add_cookie_handlers(
+  fluidPage(
     
-    nav_panel("Shot Charts",
-      sidebarPanel(
-              
-        textInput("date", "Enter a date (MM-DD-YYYY):", value = format(as.Date(Sys.Date()), format = "%m-%d-%Y")),
+    # Application title
+    titlePanel("NHL Shot Chart Generator"),
     
-        fluidRow(
-          column(6, actionButton("previousDay", "Previous Day")),
-          column(6, actionButton("nextDay", "Next Day"))
-        ),
-    
-        selectInput("game", "Select a game:", choices = list("Loading..." = 1)),
-    
-        downloadButton("save", "Save as PNG"),
-    
-        br(),
-    
-        div("Created by Max Campbell.")
+    navset_pill(
+      
+      nav_panel("Shot Charts",
+                sidebarPanel(
+                  
+                  dateInput("date", "Enter a date (MM-DD-YYYY):", value = getDate(), format = "mm-dd-yyyy"),
+                  
+                  fluidRow(
+                    column(6, actionButton("previousDay", "Previous Day")),
+                    column(6, actionButton("nextDay", "Next Day"))
+                  ),
+                  
+                  selectInput("game", "Select a game:", choices = list("Loading..." = 1)),
+                  
+                  downloadButton("save", "Save as PNG"),
+                  
+                  br(),
+                  
+                  div("Created by Max Campbell.")
+                ),
+                
+                mainPanel(
+                  card(plotOutput("chart"))
+                )              
       ),
-  
-      mainPanel(
-        card(plotOutput("chart"))
-      )              
-    ),
-    
-    nav_panel("Player Data",
-      sidebarPanel(
-        div("Coming soon!")
+      
+      nav_panel("Player Data",
+                sidebarPanel(
+                  div("Coming soon!")
+                )
+      ),
+      
+      nav_panel("Settings",
+                sidebarPanel(
+                  selectInput("timezone", "Select default timezone for application startup:", choices = timeZones(), 
+                              selected = get_cookie(cookie_name = "timezone", missing = "America/New_York"))
+                )    
       )
+      
     )
-    
   )
 )
+  
 
 server <- function(input, output, session) {
   
@@ -99,7 +111,10 @@ server <- function(input, output, session) {
   #Update default timezone whenever the preferred timezone is changed in the UI.
   observeEvent(input$timezone, {
     
-    Sys.setenv(tz = input$timezone)
+    set_cookie(
+      cookie_name = "timezone",
+      cookie_value = input$timezone
+    )
     
   })
   
