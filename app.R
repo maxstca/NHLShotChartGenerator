@@ -70,13 +70,8 @@ server <- function(input, output, session) {
   ### SETTINGS ###
   #If it exists, get the timezone cookie on app startup
   observe({
-    timezone_cookie <- get_cookie("timezone")
-    
-    # If a cookie value exists, update the input field
-    if (!is.null(timezone_cookie)) {
-      updateSelectInput(session, "timezone", selected = timezone_cookie)
-    }
-    
+    timezone_cookie <- get_cookie("timezone", missing = "America/New_York")
+    updateSelectInput(session, "timezone", selected = timezone_cookie)
     updateDateInput(session, "date", value = getDate(timezone = timezone_cookie))
   })
   
