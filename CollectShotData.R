@@ -54,6 +54,7 @@ deltaE["BUF", "STL"] <- deltaE["STL", "BUF"] <- 10
 deltaE["CAR", "MTL"] <- deltaE["MTL", "CAR"] <- 10
 deltaE["CAR", "OTT"] <- deltaE["OTT", "CAR"] <- 10
 deltaE["ANA", "EDM"] <- deltaE["EDM", "ANA"] <- 10
+deltaE["TOR", "BUF"] <- deltaE["BUF", "TOR"] <- 10
 
 #Grabs basic game information (teams, team colors, etc.)
 getGameInfoByDate <- function(input_date = format(Sys.Date(), format = "%Y-%m-%d")) {
