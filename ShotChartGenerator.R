@@ -68,6 +68,16 @@ generateShotCharts <- function(games, index = 1, includeNonSOG = FALSE) {
   homegoals <- nrow(shotdata |>
                       filter(TeamCode == homeTeamAbbr, typeDescKey == "goal"))
   
+  #Determine how legend should be built based on if a goal has been scored yet
+  if (homegoals == 0 && awaygoals == 0) {
+    legend_values_arg <- c("shot-on-goal" = 3)
+    legend_labels_arg <- c("Shot on Goal")
+  } else {
+    legend_values_arg <- c("goal" = 16, "shot-on-goal" = 3)
+    legend_labels_arg <- c("Goal", "Shot on Goal")
+  }
+  
+  #Grab team logos for use in the plot
   away_img <- magick::image_read(distinct(shotdata |>
                                             filter(TeamCode == awayTeamAbbr),
                                           teamLogo)$teamLogo[1]) |>
@@ -148,7 +158,7 @@ generateShotCharts <- function(games, index = 1, includeNonSOG = FALSE) {
       shape = "Shot Type",
       caption = glue("Total SOG: {shotdata$awayTeamAbbr[1]} {awaySOG} - {shotdata$homeTeamAbbr[1]} {homeSOG}")
     ) +
-    scale_shape_manual(values = c("goal" = 16, "shot-on-goal" = 3), labels = c("Goal", "Shot on Goal")) +
+    scale_shape_manual(values = legend_values_arg, labels = legend_labels_arg) +
     theme_void() +
     theme(plot.title = element_text(hjust = 0.5),
           plot.subtitle = element_text(hjust = 0.5),
