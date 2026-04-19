@@ -60,27 +60,7 @@ generateShotCharts <- function(games, index = 1, includeNonSOG = FALSE) {
       shotdata$y.Coord[j] <- shotdata$y.Coord[j] * -1
     }
   }
-  
-  #Grab team logos for use in the plot
-  away_img <- magick::image_read(distinct(shotdata |>
-                                            filter(TeamCode == awayTeamAbbr),
-                                          teamLogo)$teamLogo[1]) |>
-    image_colorize(opacity = 60, color = "white")
-  
-  away_img <- grid::rasterGrob(away_img, interpolate = TRUE)
-  
-  home_img <- magick::image_read(distinct(shotdata |>
-                                            filter(TeamCode == homeTeamAbbr),
-                                          teamLogo)$teamLogo[1]) |>
-    image_colorize(opacity = 60, color = "white")
-  
-  home_img <- grid::rasterGrob(home_img, interpolate = TRUE)
-  
-  #Build strings based on game parameters
-  title_string <- buildTitleString(game$id, game$date, game$gameState)
-  scoreline <- buildScorelineString(shotdata)
-  caption_string <- buildCaptionString(shotdata)
-  
+
   #Build legend based on game parameters
   legend_args <- buildLegendParams(shotdata)
   
@@ -90,15 +70,15 @@ generateShotCharts <- function(games, index = 1, includeNonSOG = FALSE) {
   
   #Generate final plot
   chart <- nhl_rink_plot() + 
-    annotation_custom(away_img, xmin = -25, xmax = -5, ymin = -10, ymax = 10) +
-    annotation_custom(home_img, xmin = 5, xmax = 25, ymin = -10, ymax = 10) +
+    annotation_custom(getTeamLogoImage(shotdata, shotdata$awayTeamAbbr[1]), xmin = -25, xmax = -5, ymin = -10, ymax = 10) +
+    annotation_custom(getTeamLogoImage(shotdata, shotdata$homeTeamAbbr[1]), xmin = 5, xmax = 25, ymin = -10, ymax = 10) +
     geom_point(data = shotdata, aes(x = x.Coord, y = y.Coord, color = teamColor, shape = factor(typeDescKey)), size = 3) +
     scale_color_identity() +
     labs(
-      title = title_string,
-      subtitle = scoreline,
+      title = buildTitleString(game$id, game$date, game$gameState),
+      subtitle = buildScorelineString(shotdata),
       shape = "Shot Type",
-      caption = caption_string
+      caption = buildCaptionString(shotdata)
     ) +
     scale_shape_manual(values = legend_args[[1]], labels = legend_args[[2]]) +
     theme_void() +
@@ -260,6 +240,27 @@ buildLegendParams <- function(shotdata) {
   
   return(legend_args = list(legend_values_arg, legend_labels_arg))
   
+}
+## Team logo helper function
+#
+# This function gets a teams logo as provided by the shot data, and
+# converts it to a format that ggplot likes.
+#
+# Parameters:
+# shotdata - shot data provided by the NHL API and transformed to add team and player info.
+# teamAbbr - the abbreviated code for the desired team logo. Ex. CAR for Carolina Hurricanes.
+#
+# Returns a raster object compatible with ggplot's `annotation_custom()` function.
+getTeamLogoImage <- function(shotdata, teamAbbr) {
+  
+  current_img <- magick::image_read(distinct(shotdata |>
+                                filter(TeamCode == teamAbbr),
+                              teamLogo)$teamLogo[1]) |>
+    image_colorize(opacity = 60, color = "white")
+  
+  current_img <- grid::rasterGrob(current_img, interpolate = TRUE)
+  
+  return(current_img)
 }
 
 #examplelist <- generateShotCharts(date = as.Date("12-27-2025", format = "%m-%d-%Y"))
