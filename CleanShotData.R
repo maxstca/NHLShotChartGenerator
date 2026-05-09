@@ -66,7 +66,7 @@ getCleanedShotData <- function(game, includeNonSOG = FALSE) {
   shotdata <- shotdata |>
     rowwise() |>
     mutate(shotDistance = ifelse(TeamCode == awayTeamAbbr, getEuclideanDistance(c(x.Coord, y.Coord), c(-89, 0)), getEuclideanDistance(c(x.Coord, y.Coord), c(89, 0))),
-           shotAngle = getShotAngle(c(abs(x.Coord), abs(y.Coord)))) |>
+           shotAngle = ifelse(TeamCode == awayTeamAbbr, getShotAngle(c(x.Coord, y.Coord), c(-89, 0)), getShotAngle(c(x.Coord, y.Coord), c(89, 0)))) |>
     ungroup()
   
   return(shotdata)
@@ -107,8 +107,8 @@ getShotAngle <- function(shot_loc, goal_line = c(89, 0)) {
   
   angle <- asin(opposite / hypoteneuse) * (180 / pi)
   
-  #Note that all values should be > 0 already.
-  if (shot_loc[1] > goal_line[1]) {
+  
+  if (abs(shot_loc[1]) > abs(goal_line[1])) {
     angle <- (90 - angle) + 90
   }
   
