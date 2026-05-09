@@ -65,7 +65,7 @@ getCleanedShotData <- function(game, includeNonSOG = FALSE) {
   
   shotdata <- shotdata |>
     rowwise() |>
-    mutate(shotDistance = getEuclideanDistance(c(abs(x.Coord), abs(y.Coord)), c(89, 0)),
+    mutate(shotDistance = ifelse(TeamCode == awayTeamAbbr, getEuclideanDistance(c(x.Coord, y.Coord), c(-89, 0)), getEuclideanDistance(c(x.Coord, y.Coord), c(89, 0))),
            shotAngle = getShotAngle(c(abs(x.Coord), abs(y.Coord)))) |>
     ungroup()
   
