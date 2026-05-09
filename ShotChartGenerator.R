@@ -7,6 +7,7 @@ library(magick)
 library(ggiraph)
 
 source("CollectShotData.R")
+source("CleanShotData.R")
 devtools::source_url("https://raw.githubusercontent.com/mrbilltran/the-win-column/master/nhl_rink_plot.R")
 
 generateShotCharts <- function(games, index = 1, includeNonSOG = FALSE) {
@@ -218,72 +219,7 @@ getTeamLogoImage <- function(shotdata, teamAbbr) {
   return(current_img)
 }
 
-## Shot data helper function
-#
-# This function takes raw PBP data from the NHL API
-# and cleans it into a dataset usable for display and visualization.
-#
-# Parameters:
-# game - A dataframe containing information related to a single NHL game.
-# includeNonSOG - include blocked and missed shot attempts, default = FALSE.
-#
-# Returns a dataframe of cleaned shot data.
-getCleanedShotData <- function(game, includeNonSOG = FALSE) {
-  
-  #Get raw info
-  raw_pbp <- getPBPraw(game$id)
-  
-  return_early_flag <- FALSE
-  
-  #Check for null PBP data and return early if no PBP exists yet.
-  tryCatch({
-    pbp <<- getShotData(game$id) |> 
-      rename(x.Coord = xCoord, y.Coord = yCoord)
-    
-    if ("scoringPlayerId" %in% colnames(pbp)) {
-      pbp <<- pbp |>
-        mutate(shootingPlayerId = if_else(typeDescKey == "goal", scoringPlayerId, shootingPlayerId))
-    }
-    
-    player_info <<- getPlayerInfo(raw_pbp, game)
-  }, error = function(e) {
-    return_early_flag <<- TRUE
-  })
-  
-  if(return_early_flag) {
-    return(NULL)
-  }
-  
-  #Filter down to desired event types
-  if (!includeNonSOG) {
-    sog_types <- c("shot-on-goal", "goal")
-  } else {
-    sog_types <- c("shot-on-goal", "goal", "missed-shot", "blocked-shot")
-  }
-  
-  #Add player info
-  shotdata <- pbp |>
-    left_join(player_info, by = join_by(shootingPlayerId == PlayerID)) |>
-    filter(typeDescKey %in% sog_types)
-  
-  #Transform coordinate plane such that visiting team shoots left, home team shoots right
-  for (j in 1:nrow(shotdata)) {
-    if (shotdata$homeTeamDefendingSide[j] == "right" && shotdata$awayTeamAbbr[j] == shotdata$TeamCode[j]) {
-      shotdata$x.Coord[j] <- shotdata$x.Coord[j] * -1
-      shotdata$y.Coord[j] <- shotdata$y.Coord[j] * -1
-    } else if (shotdata$homeTeamDefendingSide[j] == "right" && shotdata$homeTeamAbbr[j] == shotdata$TeamCode[j]) {
-      shotdata$x.Coord[j] <- shotdata$x.Coord[j] * -1
-      shotdata$y.Coord[j] <- shotdata$y.Coord[j] * -1
-    }
-  }
-  
-  #Remove shootout attempts/goals from the data
-  shotdata <- shotdata |>
-    filter(periodType != "SO")
-  
-  return(shotdata)
-  
-}
+
 
 
 #examplelist <- generateShotCharts(date = as.Date("12-27-2025", format = "%m-%d-%Y"))

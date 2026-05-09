@@ -9,6 +9,7 @@ options(shiny.usecairo=T)
 #Helper files
 source("ShotChartGenerator.R")
 source("CollectShotData.R")
+source("CleanShotData.R")
 source("TimeZoneHelper.R")
 
 # UI
@@ -179,10 +180,9 @@ server <- function(input, output, session) {
     df <- tryCatch ({
       getCleanedShotData(game_info()[input$game,]) |> #Can remove this pipeline to view the raw shotdata for debugging, if necessary.
         select(number, periodType, timeRemaining, situationCode, typeDescKey, x.Coord, y.Coord,
-               shotType, awayScore, homeScore, awaySOG, homeSOG, firstName, lastName, TeamCode)
+               shotType, shotDistance, shotAngle, awayScore, homeScore, awaySOG, homeSOG, firstName, lastName, TeamCode)
     }, error = function(e) {
-      data.frame(error = "Shot data failed to generate! This error occurs if a game has not started yet or if shot data is incomplete early in a game."
-      )
+      data.frame(error = "Shot data failed to generate! This error occurs if a game has not started yet or if shot data is incomplete early in a game.")
     })
   )
   
