@@ -34,10 +34,6 @@ ui <- add_cookie_handlers(
                   selectInput("game", "Select a game:", choices = list("Loading..." = 1)),
                   
                   downloadButton("save", "Save as PNG"),
-                  
-                  br(),
-                  
-                  div("Created by Max Campbell.")
                 ),
                 
                 mainPanel(
@@ -45,9 +41,21 @@ ui <- add_cookie_handlers(
                 )              
       ),
       
-      nav_panel("Player Data",
+      nav_panel("Shot Data",
                 sidebarPanel(
-                  div("Coming soon!")
+                  div("Select a different shot chart to change the current game output."),
+                  
+                  br(),
+                  
+                  div("Please be aware that this page may return errors at the start of or prior to games as shooting data is typically incomplete at this point."),
+                  
+                  br(),
+                  
+                  downloadButton("exportCSV", "Export CSV")
+                ),
+                
+                mainPanel(
+                  tableOutput("table")
                 )
       ),
       
@@ -55,8 +63,14 @@ ui <- add_cookie_handlers(
                 sidebarPanel(
                   selectInput("timezone", "Select default timezone for application startup:", choices = timeZones(), 
                               selected = timeZones()[grepl("America/New_York", timeZones())]),
+                  
                   actionButton("save_settings", "Save Changes"),
-                  div("Note: browser cookies need to be enabled for this website for changes to save.")
+                  
+                  div("Note: browser cookies need to be enabled for this website for changes to save."),
+                  
+                  br(),
+                  
+                  div("NHL Shot Chart Generator was created by Max Campbell.")
                 )    
       )
       
@@ -159,6 +173,28 @@ server <- function(input, output, session) {
         )
     }
   )
+  
+  ### TABLE DISPLAY ###
+  cleanedShotData <- reactive(
+    df <- tryCatch ({
+      getCleanedShotData(game_info()[input$game,]) |> #Can remove this pipeline to view the raw shotdata for debugging, if necessary.
+        select(number, periodType, timeRemaining, situationCode, typeDescKey, x.Coord, y.Coord,
+               shotType, awayScore, homeScore, awaySOG, homeSOG, firstName, lastName, TeamCode)
+    }, error = function(e) {
+      data.frame(error = "Shot data failed to generate! This error occurs if a game has not started yet or if shot data is incomplete early in a game."
+      )
+    })
+  )
+  
+  output$table <- renderTable(cleanedShotData())
+  
+  output$exportCSV <- downloadHandler(
+    filename = "ShotData.csv",
+    content = function(file) {
+      write.csv(cleanedShotData(), file)
+    }
+  )
+  
 }
 
 # Run the application 
