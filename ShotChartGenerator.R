@@ -81,6 +81,11 @@ buildTitleString <- function(game_id, game_date, game_current_status) {
       
     }
     
+  } else if (as.numeric(substr(game_id, 5, 6)) == 1) { #Check if the game type is preseason (== 1)
+    
+    #Append "Preseason" tp the title
+    title_string <- paste0("Preseason ", title_string)
+    
   }
   
   #Add the date of the game
