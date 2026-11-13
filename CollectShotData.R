@@ -126,10 +126,9 @@ getShotData <- function(gameID = "2025020001") {
   }
   )
   
-  
 }
 
-getPlayerInfo <- function(rawPBP, gameInfo) {
+getPlayerInfo <- function(rawPBP) {
   players <- rawPBP$rosterSpots |>
     select(teamId, playerId, sweaterNumber, positionCode, headshot)
   
@@ -140,9 +139,9 @@ getPlayerInfo <- function(rawPBP, gameInfo) {
   players <- cbind(players, firstNames$default, lastNames$default)
   colnames(players) <- c("TeamID", "PlayerID", "sweaterNumber", "positionCode", "headshot", "firstName", "lastName")
   
-  teams <- gameInfo |>
-    filter(id == rawPBP$id)
-  teams <- data.frame(c(teams$homeID, teams$awayID),c(teams$homeTeamAbbrev, teams$awayTeamAbbrev))
+  homeTeam <- rawPBP$homeTeam
+  awayTeam <- rawPBP$awayTeam
+  teams <- data.frame(c(homeTeam$id, awayTeam$id),c(homeTeam$abbrev, awayTeam$abbrev))
   colnames(teams) <- c("id", "TeamCode")
   
   colors <- getTeamLogosColors(homeTeamAbbr = teams$TeamCode[1], awayTeamAbbr = teams$TeamCode[2])

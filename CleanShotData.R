@@ -1,4 +1,5 @@
 library(tidyverse)
+source("CollectShotData.R")
 
 ## Shot data helper function
 #
@@ -6,20 +7,28 @@ library(tidyverse)
 # and cleans it into a dataset usable for display and visualization.
 #
 # Parameters:
-# game - A dataframe containing information related to a single NHL game.
+# game - A dataframe containing information related to a single NHL game OR a string containing the game's ID.
 # includeNonSOG - include blocked and missed shot attempts, default = FALSE.
 #
 # Returns a dataframe of cleaned shot data.
 getCleanedShotData <- function(game, includeNonSOG = FALSE) {
   
   #Get raw info
-  raw_pbp <- getPBPraw(game$id)
+  if (is.character(game) && length(game) == 1 && !is.na(game)) {
+    game_id <- game
+  } else {
+    game_id <- game$id
+  }
+  
+  raw_pbp <- getPBPraw(game_id)
   
   return_early_flag <- FALSE
   
   #Check for null PBP data and return early if no PBP exists yet.
   tryCatch({
-    pbp <<- getShotData(game$id) |> 
+    pbp <<- raw_pbp$plays |>
+      unnest() |>
+      filter(typeCode %in% (505:508)) |>
       rename(x.Coord = xCoord, y.Coord = yCoord)
     
     if ("scoringPlayerId" %in% colnames(pbp)) {
@@ -27,7 +36,7 @@ getCleanedShotData <- function(game, includeNonSOG = FALSE) {
         mutate(shootingPlayerId = if_else(typeDescKey == "goal", scoringPlayerId, shootingPlayerId))
     }
     
-    player_info <<- getPlayerInfo(raw_pbp, game)
+    player_info <<- getPlayerInfo(raw_pbp)
   }, error = function(e) {
     return_early_flag <<- TRUE
   })
