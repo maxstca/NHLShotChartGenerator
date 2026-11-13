@@ -5,7 +5,7 @@ library(tidyverse)
 library(spacesXYZ)
 
 #RDA files
-load("team_logos_colors.rda") #Data sourced from github user danmorse314 via the hockeyR package.
+load("cache/team_logos_colors.rda") #Data sourced from github user danmorse314 via the hockeyR package.
 
 #Manually edit values in the dataframe from above
 #team_logos_colors$team_color2[11] <- "#BDAD7E" #DET alt
